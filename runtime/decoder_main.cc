@@ -53,7 +53,6 @@ void decode(std::pair<std::string, std::string> wav, bool warmup = false, bool l
   wenet::Timer copy_timer;
 
   wenet::WavReader wav_reader(wav.second, log);
-  // 오래걸림
 
   int load_time = copy_timer.Elapsed();
   copy_time += load_time;
@@ -72,8 +71,6 @@ void decode(std::pair<std::string, std::string> wav, bool warmup = false, bool l
   }
   wenet::AsrDecoder decoder(feature_pipeline, g_decode_resource,
                             *g_decode_config);
-  
-  // ^ copy 과정
 
   //wenet::TorchAsrModel test_warm;
   //test_warm.WarmingUp(10000);
@@ -135,8 +132,6 @@ void decode(std::pair<std::string, std::string> wav, bool warmup = false, bool l
             << "ms.";
   }
   if (!warmup) {
-    //int code_close = 0;
-    //wenet::Timer code_time;
     g_mutex.lock();
     std::ostream& buffer = FLAGS_result.empty() ? std::cout : g_result;
     if (!FLAGS_output_nbest) {
@@ -152,9 +147,6 @@ void decode(std::pair<std::string, std::string> wav, bool warmup = false, bool l
     g_total_waves_dur += wave_dur;
     g_total_decode_time += decode_time;
     g_mutex.unlock();
-    //int code_open = code_time.Elapsed();
-    //code_close += code_open;
-    //LOG(INFO) << "!warmup time " << code_close << "ms.";
   }
 }
 
@@ -227,10 +219,6 @@ int main(int argc, char* argv[]) {
     float warm_up_time = warm_up_check.Elapsed();
     LOG(INFO) << "warming up time " << (warm_up_time / 1000.) << "seconds";
     for (auto& wav : waves) {
-      //srand(time(NULL));
-      //int time_rand = ((rand() % 8) + 3);
-      //sleep(time_rand);
-      //LOG(INFO) << "slept " << time_rand << "seconds.";
       //warm_up_check.Reset();
       //LOG(INFO) << "warming up ..";
       //for (int i = 0; i < 5; i++) {
